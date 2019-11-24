@@ -9,6 +9,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import  { post } from 'axios';
+import { Redirect } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 
 // logo color => rgb: 165 0 33, hex: #a50021
@@ -85,7 +87,8 @@ class Home extends React.Component {
       username: '',
       email: '',
       password: '',
-      open: false
+      open: false,
+      doRedirect: false
     }
   }
 
@@ -131,7 +134,8 @@ class Home extends React.Component {
       username: '',
       email: '',
       password: '',
-      open: false
+      open: false,
+      doRedirect: true
     })
 
   }
@@ -143,7 +147,7 @@ class Home extends React.Component {
     formData.append('email', this.state.email);
     formData.append('password', this.state.password);
 
-    return postMessage(url, formData);
+    return post(url, formData);
   }
 
   render() {
@@ -156,7 +160,7 @@ class Home extends React.Component {
             <img src={logo} alt="logo" className={classes.image} />
             <Button variant="outlined" className={classes.login_btn} href="/login">
               로그인
-              </Button>
+            </Button>
           </Toolbar>
         </AppBar>
 
@@ -199,8 +203,8 @@ class Home extends React.Component {
 
             <Button variant="contained" className={classes.signup_btn} onClick={this.handleFormSubmit}>
               회원가입
-              </Button>
-
+            </Button>
+            { this.state.doRedirect && <Redirect to="/welcome" />}
           </form>
         </div>
 

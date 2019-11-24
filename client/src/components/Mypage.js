@@ -10,8 +10,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
+import  { post } from 'axios';
+import { withStyles } from '@material-ui/core/styles';
 
 // logo color => rgb: 165 0 33, hex: #a50021
 
@@ -57,13 +58,6 @@ const styles = theme => ({
   },
   deleteaccountclosing_btn: {
     color: '#a50021'
-  },
-  deleteaccount_btn: {
-    backgroundColor: '#a50021',
-    color: '#ffffff',
-    '&:hover': {
-      background: '#a50021'
-    }
   },
   body: {
     // display: 'flex',
@@ -156,7 +150,7 @@ class Main extends React.Component {
     const formData = new FormData();
     formData.append("roompassword", this.state.roompassword);
 
-    return postMessage(url, formData);
+    return post(url, formData);
   }
 
   deleteAccount = () => {
@@ -164,7 +158,7 @@ class Main extends React.Component {
     const formData = new FormData();
     formData.append("password", this.state.password);
 
-    return postMessage(url, formData);
+    return post(url, formData);
   }
 
   render() {
@@ -208,7 +202,7 @@ class Main extends React.Component {
                 </DialogContent>
                 <DialogActions>
                   <Button variant="outlined" onClick={this.handleClose} className={classes.deleteroomclosing_btn}>닫기</Button>
-                  <Button variant="contained" onClick={this.handleFormSubmit} className={classes.deleteroom_btn} onClick={this.handleRoomFormSubmit}>삭제</Button>
+                  <Button variant="contained" onClick={this.handleRoomFormSubmit} className={classes.deleteroom_btn}>삭제</Button>
                 </DialogActions>
               </Dialog>
               <br />
@@ -239,7 +233,7 @@ class Main extends React.Component {
             </DialogContent>
             <DialogActions>
               <Button variant="outlined" onClick={this.handleClose} className={classes.deleteaccountclosing_btn}>닫기</Button>
-              <Button variant="contained" onClick={this.handleFormSubmit} className={classes.deleteaccount_btn} onClick={this.handleAccountFormSubmit}>삭제</Button>
+              <Button variant="contained" onClick={this.handleAccountFormSubmit} className={classes.deleteaccount_btn}>삭제</Button>
             </DialogActions>
           </Dialog>
         </div>

@@ -11,6 +11,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import  { post } from 'axios';
 import { fade, withStyles } from '@material-ui/core/styles';
 
 // logo color => rgb: 165 0 33, hex: #a50021
@@ -178,7 +179,7 @@ class Main extends React.Component {
     formData.append('roompassword', this.state.roompassword);
     formData.append('roomowner', this.state.roomowner);
 
-    return postMessage(url, formData);
+    return post(url, formData);
   }
 
   render() {
