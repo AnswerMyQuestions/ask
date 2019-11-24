@@ -45,7 +45,7 @@ const styles = theme => ({
   deleteroomclosing_btn: {
     color: '#a50021'
   },
-  deleteaccount_btn_display: {
+  deleteaccount: {
     display: 'flex',
     justifyContent: 'flex-end'
   },
@@ -54,7 +54,8 @@ const styles = theme => ({
     color: '#ffffff',
     '&:hover': {
       background: '#a50021'
-    }
+    },
+    marginRight: '50px'
   },
   deleteaccountclosing_btn: {
     color: '#a50021'
@@ -65,10 +66,17 @@ const styles = theme => ({
     // justifyContent: 'center'
     textAlign: 'center',
   },
-  edit_userinfo: {
+  avatar: {
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: '30px',
+    marginBottom: '30px'
+  },
+  roominfo: {
     display: 'flex',
     justifyContent: 'space-around',
-    width: '500px',
+    marginTop: '50px',
+    marginBottom: '50px',
     color: '#ffffff'
   },
   textField: {
@@ -96,7 +104,8 @@ class Main extends React.Component {
     this.state = {
       roompassword: '',
       password: '',
-      open: false
+      roomopen: false,
+      accountopen: false
     }
   }
 
@@ -108,16 +117,28 @@ class Main extends React.Component {
   * 
   */
 
-  handleOpen = () => {
+  handleRoomOpen = () => {
     this.setState({
-      open: true
+      roomopen: true
     });
   }
 
-  handleClose = () => {
+  handleRoomClose = () => {
     this.setState({
-      open: false
-    })
+      roomopen: false
+    });
+  }
+
+  handleAccountOpen = () => {
+    this.setState({
+      accountopen: true
+    });
+  }
+
+  handleAccountClose = () => {
+    this.setState({
+      accountopen: false
+    });
   }
 
   handleValueChange = (e) => {
@@ -132,7 +153,8 @@ class Main extends React.Component {
       .then(response => console.log(response));
 
     this.setState({
-      roompassword: ''
+      roompassword: '',
+      roomopen: false
     });
   }
 
@@ -141,7 +163,8 @@ class Main extends React.Component {
     this.deleteAccount()
       .then(response => console.log(response));
     this.setState({
-      password: ''
+      password: '',
+      accountopen: false
     });
   }
 
@@ -176,20 +199,20 @@ class Main extends React.Component {
         </AppBar>
 
         <div className={classes.body}>
-          <div>
-            <Avatar alt="avatar" src={avatar} />
+          <div className={classes.avatar}>
+            <Avatar alt="avatar" src={avatar}/>
           </div>
-          <div className={classes.edit_userinfo}>
+          <div className={classes.roominfo}>
             <div>
               <p>내가 만든 방</p>
               {/* 
-                    **
-                    ** 반복문으로 바꾸기
-                    ** 
-                    */}
+                **
+                ** 반복문으로 바꾸기
+                ** 
+                */}
               1. 이것이 방이다.
-                    <Button variant="contained" className={classes.deleteroom_btn} onClick={this.handleOpen}>삭제</Button>
-              <Dialog open={this.state.open} onClose={this.handleClose}>
+              <Button variant="contained" className={classes.deleteroom_btn} onClick={this.handleRoomOpen}>삭제</Button>
+              <Dialog open={this.state.roomopen} onClose={this.handleRoomClose}>
                 <DialogTitle>{"방 삭제"}</DialogTitle>
                 <DialogContent>
                   <DialogContentText>
@@ -201,7 +224,7 @@ class Main extends React.Component {
                   </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                  <Button variant="outlined" onClick={this.handleClose} className={classes.deleteroomclosing_btn}>닫기</Button>
+                  <Button variant="outlined" onClick={this.handleRoomClose} className={classes.deleteroomclosing_btn}>닫기</Button>
                   <Button variant="contained" onClick={this.handleRoomFormSubmit} className={classes.deleteroom_btn}>삭제</Button>
                 </DialogActions>
               </Dialog>
@@ -218,21 +241,21 @@ class Main extends React.Component {
             </div>
           </div>
         </div>
-        <div className={classes.deleteaccount_btn_display}>
-          <Button variant="contained" className={classes.deleteaccount_btn} onClick={this.handleOpen}>탈퇴</Button>
-          <Dialog open={this.state.open} onClose={this.handleClose}>
+        <div className={classes.deleteaccount}>
+          <Button variant="contained" className={classes.deleteaccount_btn} onClick={this.handleAccountOpen}>탈퇴</Button>
+          <Dialog open={this.state.accountopen} onClose={this.handleAccountClose}>
             <DialogTitle>{"계정 삭제"}</DialogTitle>
             <DialogContent>
               <DialogContentText>
                 정말 계정을 삭제하실건가요?<br />
-                삭제하고 싶으면 계정 비밀번호를 입력하세요<br />
+                삭제하고 싶으시면 계정 비밀번호를 입력하세요<br />
                 <form>
                   <TextField type="text" name="password" label="계정 비밀번호" value={this.state.password} onChange={this.handleValueChange} className={classes.textField} /><br />
                 </form>
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button variant="outlined" onClick={this.handleClose} className={classes.deleteaccountclosing_btn}>닫기</Button>
+              <Button variant="outlined" onClick={this.handleAccountClose} className={classes.deleteaccountclosing_btn}>닫기</Button>
               <Button variant="contained" onClick={this.handleAccountFormSubmit} className={classes.deleteaccount_btn}>삭제</Button>
             </DialogActions>
           </Dialog>
