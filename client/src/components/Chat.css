@@ -1,0 +1,57 @@
+.root {
+  width: '100%';
+  height: '100%';
+  background: 'rgba(0, 0, 0, 0.8)';
+  color: '#ffffff';
+}
+
+.toolbar {
+  justify-content: 'space-between';
+  background-color: '#000000';
+}
+.title {
+  display: 'flex';
+  justify-content: 'center';
+  color: '#ffffff';
+}
+.body {
+  display: 'flex';
+  align-items: 'stretch';
+  justify-content: 'space-around';
+  color: '#ffffff';
+  position: 'absolute'; 
+  left: 0;
+  right: 0;
+  bottom: 10;
+}
+.textField {
+  color: #000000;
+}
+.notchedOutline {
+  border-width: "1px";
+  border-color: "red !important"
+}
+.send_btn {
+  background-color: '#a50021';
+  color: '#ffffff';
+  font-size: 20;
+  margin-left: 10;
+}
+.back_btn {
+  color: 'a50021';
+  font-size: 20;
+  margin-left: 10;
+}
+.drawer {
+  width: drawerWidth;
+  flex-shrink: 0;
+}
+.drawerPaper {
+  width: drawerWidth;
+}
+.drawerHeader {
+  display: 'flex';
+  align-items: 'center';
+  justify-content: 'flex-start';
+}
+  

@@ -1,0 +1,7 @@
+{
+    "host": "localhost",
+    "user": "minji",
+    "password": "1225",
+    "port": "3306",
+    "database": "ask"
+}
