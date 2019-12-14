@@ -27,8 +27,8 @@ const Chat = ({ location }) => {
   const [messages, setMessages] = useState([]);
   const [open, setOpen] = useState(false);
 
-  const endpoint = 'http://localhost:5000';
-  
+  const endpoint = 'https://askaskask.herokuapp.com/';
+
   useEffect(() => {
     const { name, room } = queryString.parse(location.search);
 

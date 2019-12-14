@@ -19,6 +19,7 @@ const connection = mysql.createConnection({
 
 const socketio = require('socket.io');
 const http = require('http');
+const cors = require('cors');
 const server = http.createServer(app);
 const io = socketio(server);
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./users.js');
@@ -68,6 +69,7 @@ io.on('connection', (socket) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(router);
+app.use(cors());
 
 server.listen(port, () => console.log(`Listening on port ${port}`));
 
