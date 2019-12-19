@@ -6,7 +6,7 @@ import Welcome from './components/Welcome';
 import Main from './components/Main';
 import Mypage from './components/Mypage';
 import Chat from './components/Chat';
-import Join from './components/Join';
+import JoinRoom from './components/JoinRoom';
 
 import './App.css';
 
@@ -21,7 +21,7 @@ class App extends React.Component {
           <Route path="/main" component={Main}></Route>
           <Route path="/mypage" component={Mypage}></Route>
           <Route path="/chat" component={Chat}></Route>
-          <Route path="/join" component={Join}></Route>
+          <Route path="/joinroom" component={JoinRoom}></Route>
         </Switch>
       </Router>
     )
