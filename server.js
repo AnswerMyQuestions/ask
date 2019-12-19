@@ -39,7 +39,6 @@ io.on('connect', (socket) => {
     // io.to(소켓아이디).emit('이벤트명'); 특정한 사람에게 메세지를 보낼 수 있음
     // https://www.zerocho.com/category/NodeJS/post/57edfcf481d46f0015d3f0cd 참고
     socket.on('join room', ({ name, room }, callback) => {
-        console.log("서버에서 join room이라는 이벤트를 받는다.");
         console.log(name, room);
         const { error, user } = addUser({ id: socket.id, name, room });
 

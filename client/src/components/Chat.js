@@ -27,7 +27,7 @@ const Chat = ({ location }) => {
   const [messages, setMessages] = useState([]);
   const [open, setOpen] = useState(false);
 
-  const endpoint = 'https://askaskask.herokuapp.com:5000';
+  const endpoint = 'https://askaskask.herokuapp.com/';
   // const endpoint = 'localhost:5000';
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const Chat = ({ location }) => {
     setRoom(room);
 
     socket.emit('join room', { name, room }, () => {
-      console.log("서버로 join room이라는 이벤트를 보낸다.");
+      
     });
 
     return () => {
