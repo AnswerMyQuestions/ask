@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -99,7 +100,7 @@ const Chat = ({ location }) => {
       <div className="header">
         <AppBar position="static">
           <Toolbar className="toolbar">
-            <Button color="inherit">이전</Button>
+            <Button color="inherit"><Link to="/main" className="before_link">이전</Link></Button>
             <Typography variant="h6" className="title">
               {room}
             </Typography>
@@ -115,18 +116,20 @@ const Chat = ({ location }) => {
       </div>
 
       <div className="body">
-        <form className="message">
-          <TextField type="text" name="message" mx="auto" className="textField" placeholder="질문을 입력하세요. " fullWidth value={message} onChange={handleValueChange} variant="outlined" multiline style={{ width: 1400 }} InputProps={{}} onKeyPress={event => event.key === 'Enter' ? sendMessage(event) : null}></TextField>
-          <Button variant="contained" className="send_btn" endIcon={<SvgIcon><path d="M3.4 20.4l17.45-7.48c.81-.35.81-1.49 0-1.84L3.4 3.6c-.66-.29-1.39.2-1.39.91L2 9.12c0 .5.37.93.87.99L17 12 2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91z" /></SvgIcon>} style={{ height: 55 }} onClick={handleFormSubmit}>
+        <form>
+          <TextField type="text" name="message" className="textField" placeholder="질문을 입력하세요." value={message} onChange={handleValueChange} variant="outlined" InputProps={{}} onKeyPress={event => event.key === 'Enter' ? sendMessage(event) : null}></TextField>
+          <Button className="send_btn" variant="contained" endIcon={<SvgIcon><path d="M3.4 20.4l17.45-7.48c.81-.35.81-1.49 0-1.84L3.4 3.6c-.66-.29-1.39.2-1.39.91L2 9.12c0 .5.37.93.87.99L17 12 2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91z" /></SvgIcon>} onClick={handleFormSubmit}>
             보내기
           </Button>
         </form>
         <Messages messages={messages} name={name} />
       </div>
-      <Drawer className="drawer" variant="persistent" anchor="right" docked="false" width={200} open={open}
+      <Drawer className="drawer" variant="persistent" anchor="right" docked="false" open={open}
         classes={{ paper: "drawerPaper" }}>
         <div className="drawerHeader">
-          <IconButton onClick={handleClose} icon={<KeyboardArrowLeftIcon className="back_btn"/>} />            
+          <IconButton onClick={handleClose}>
+            <KeyboardArrowLeftIcon />
+          </IconButton>
         </div>
         {
           users
