@@ -100,6 +100,15 @@ app.post('/signin', (req, res) => {
     console.log('signin post');
 });
 
+// Main
+app.get('./createroom', (req, res) => {
+    console.log('createroom get');
+});
+
+app.post('/createroom', (req, res) => {
+    console.log('createroom post');
+});
+
 // Mypage
 app.post('/deleteroom', (req, res) => {
     console.log('deleteroom post'); // delete문 또는 삭제여부 표시

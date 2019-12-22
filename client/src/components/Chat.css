@@ -32,7 +32,7 @@ a.before_link {
   text-decoration: none;
 }
 
-form {
+.chat_form {
   display: flex;
   width: 100%;
   justify-content: space-between;
@@ -41,12 +41,11 @@ form {
 }
 
 div.textField {
-  padding: 5px;
   font-size: 16px;
   width: 100%;
 } 
 
-div.MuiInputBase-root {
+label.MuiFormLabel-root {
   color: #ffffff;
 }
 
