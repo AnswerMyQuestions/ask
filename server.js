@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const app = express();
+const port = process.env.PORT || 5000;
 const socketio = require('socket.io');
 const http = require('http');
 const cors = require('cors');
@@ -8,20 +10,25 @@ const mysql = require('mysql');
 const router = require('./router');
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./users.js');
 
-const app = express();
-const port = process.env.PORT || 5000;
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(router);
+app.use(cors());
 
 const data = fs.readFileSync('./database.json');
 const conf = JSON.parse(data);
-const dbConnetion = mysql.createConnection({
+const dbConnection = mysql.createConnection({
      host: conf.host,
      user: conf.user,
      password: conf.password,
      port: conf.port,
      database: conf.database
 });
+dbConnection.connect();
 
 const server = http.createServer(app);
+server.listen(port, () => console.log(`Listening on port ${port}`));
 // const allowCrossDomain = function(req, res, next) {
 //     res.header('Access-Control-Allow-Origin', '*');
 //     res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
@@ -73,14 +80,7 @@ io.on('connect', (socket) => {
     });
 });
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true}));
-
-app.use(router);
-app.use(cors());
 // app.use(allowCrossDomain);  
-
-server.listen(port, () => console.log(`Listening on port ${port}`));
 
 // Home
 app.get('/join', (req, res) => {
@@ -101,13 +101,38 @@ app.post('/signin', (req, res) => {
 });
 
 // Main
-app.get('./createroom', (req, res) => {
+app.get('/createroom', (req, res) => {
     console.log('createroom get');
 });
 
 app.post('/createroom', (req, res) => {
     console.log('createroom post');
+    console.log(req.body);
+
+    let sql = "INSERT INTO ROOM(room_name, room_password, create_room_date, user_id) VALUES (?, ?, now(), ?)";
+
+    let roomname = req.body.roomname;
+    let roompassword = req.body.roompassword;
+    let roomowner = req.body.roomowner;
+    let params = [roomname, roompassword, roomowner];
+    dbConnection.query(sql, params,
+        (err, rows, fields) => {
+            if(err) console.log("createroom error" + err);
+            else res.send(rows);
+    });
 });
+
+app.get('/rooms', (req, res) => {
+    console.log('rooms get');
+    let sql = "SELECT room_id, room_name, user_name from ROOM, USER where ROOM.user_id = USER.user_id;";
+    dbConnection.query(sql, 
+        (err, rows, fields) => {
+            if(err) console.log("rooms error" + err);
+            else res.send(rows);
+        }
+    )
+});
+
 
 // Mypage
 app.post('/deleteroom', (req, res) => {
@@ -118,3 +143,4 @@ app.post('/deleteaccount', (req, res) => {
     console.log('deleteaccount post'); // delete문 또는 삭제여부 표시
 });
 
+// | room_id | room_name  | room_password | create_room_date    | user_id |

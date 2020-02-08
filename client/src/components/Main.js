@@ -1,4 +1,5 @@
 import React from 'react';
+import Room from './Room';
 import logo from './ask_logo.png';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
@@ -9,9 +10,8 @@ import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import  { post } from 'axios';
+import axios from 'axios';
 import { fade, withStyles } from '@material-ui/core/styles';
 
 // logo color => rgb: 165 0 33, hex: #a50021
@@ -46,9 +46,7 @@ const styles = theme => ({
     border: '1px solid rgba(255, 255, 255)'
   },
   body: {
-    //   display: 'flex',
-    //   alignItems: 'center',
-    //   justifyContent: 'space-around'
+
   },
   createandsearchroom: {
     width: '500px',
@@ -121,23 +119,41 @@ const styles = theme => ({
 class Main extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       room: '',
       roomname: '',
       roompassword: '',
       roomowner: '',
+      rooms: '',
+      searchKeyword: '',
       open: false
     }
   }
 
+  // stateRefresh = () => {
+  //   this.setState({
+  //     room: '',
+  //     roomname: '',
+  //     roompassword: '',
+  //     roomowner: '',
+  //     rooms: '',
+  //     searchKeyword: '',
+  //     open: false
+  //   });
+  //   this.callApi()
+  //     .then(res => this.setState({ rooms: res }))
+  //     .catch(err => console.log(err));
+  // }
+
   componentDidMount() {
     this.callApi()
-      .then(res => this.setState({ room: res }))
+      .then(res => this.setState({ rooms: res }))
       .catch(err => console.log(err));
   }
 
-  callApi = async () => {
-    const response = await fetch('./createroom');
+  callApi = async() => {
+    const response = await fetch('/rooms');
     const body = await response.json();
     return body;
   }
@@ -162,8 +178,18 @@ class Main extends React.Component {
 
   handleFormSubmit = (e) => {
     e.preventDefault()
-    this.createroom()
-      .then(response => console.log(response))
+
+    const room = {
+      roomname: this.state.roomname,
+      roompassword: this.state.roompassword,
+      roomowner: this.state.roomowner
+    };
+
+    axios
+      .post('/createroom', room)
+      .then(res => {
+        console.log(res.data);
+      });
 
     this.setState({
       roomname: '',
@@ -171,18 +197,15 @@ class Main extends React.Component {
       roomowner: ''
     });
   }
-
-  createroom = () => {
-    const url = './createroom';
-    const formData = new FormData();
-    formData.append('roomname', this.state.roomname);
-    formData.append('roompassword', this.state.roompassword);
-    formData.append('roomowner', this.state.roomowner);
-
-    return post(url, formData);
-  }
-
   render() {
+    const filteredComponents = (data) => {
+      data = data.filter((c) => {
+        return c.room_name.indexOf(this.state.searchKeyword) > -1;
+      });
+      return data.map((c) => {
+        return <Room key={c.room_id} roomname={c.room_name} roomowner={c.user_name}/>
+      });
+    }
     const { classes } = this.props;
     return (
       <div className={classes.root}>
@@ -203,41 +226,50 @@ class Main extends React.Component {
 
         <div className={classes.body}>
           <div className={classes.createandsearchroom}>
+            
+            
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
               </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                inputProps={{ 'aria-label': 'search' }}
-              />
+                <InputBase
+                  placeholder="검색하기"
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput,
+                  }}
+                  name="searchKeyword"
+                  value={this.state.searchKeyword}
+                  onChange={this.handleValueChange}
+                  inputProps={{ 'aria-label': 'search' }}
+                />
             </div>
+
+
             <div>
               <Button variant="contained" onClick={this.handleOpen} className={classes.addroom_btn}>+</Button>
               <Dialog open={this.state.open} onClose={this.handleClose}>
                 <DialogTitle>{"방만들기"}</DialogTitle>
                 <DialogContent>
-                  <DialogContentText>
-                    <form>
-                      <TextField type="text" name="roomname" label="방 이름" value={this.state.roomname} onChange={this.handleValueChange} className={classes.textField} /><br />
-                      <TextField type="text" name="roompassword" label="방 비밀번호" value={this.state.roompassword} onChange={this.handleValueChange} className={classes.textField} /><br />
-                      <TextField type="text" name="roomowner" label="방 주인" value={this.state.roomowner} onChange={this.handleValueChange} className={classes.textField} /><br />
-                    </form>
-                  </DialogContentText>
+                  <form>
+                    <TextField type="text" name="roomname" label="방 이름" value={this.state.roomname} onChange={this.handleValueChange} className={classes.textField} /><br />
+                    <TextField type="text" name="roompassword" label="방 비밀번호" value={this.state.roompassword} onChange={this.handleValueChange} className={classes.textField} /><br />
+                    <TextField type="text" name="roomowner" label="방 주인" value={this.state.roomowner} onChange={this.handleValueChange} className={classes.textField} /><br />
+                  </form>
                 </DialogContent>
                 <DialogActions>
                   <Button variant="outlined" onClick={this.handleClose} className={classes.addroomclosing_btn}>취소</Button>
                   <Button variant="contained" onClick={this.handleFormSubmit} className={classes.addroom_btn}>만들기</Button>
                 </DialogActions>
               </Dialog>
+              {/* https://stackoverflow.com/questions/40881616/how-to-submit-the-form-by-material-ui-dialog-using-reactjs */}
             </div>
+          
+            <div>    
+              {this.state.rooms ? filteredComponents(this.state.rooms) : <h3>만들어진 방이 없습니다.</h3>}
+            </div>      
           </div>
-
-
+          
         </div>
 
       </div>
