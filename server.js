@@ -155,7 +155,6 @@ passport.use('local', new LocalStrategy({
                   console.log('No user with that email');
                   return done(null, false, { message: 'No user with that email' });
               }
-              console.log(rows);
               try {
                   if(await bcrypt.compare("" + password, "" + rows[0].user_password)) {
                     console.log('correct!!! return rows[0]');

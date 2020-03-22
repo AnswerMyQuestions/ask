@@ -116,7 +116,7 @@ class Login extends React.Component {
           username: res.data.data,
           doRedirect: res.data.success
         });
-        console.log(this.state.doRedirect);
+        //console.log(this.state.doRedirect);
       }).catch(err => console.log(err));
     
     /*  
