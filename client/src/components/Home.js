@@ -9,8 +9,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import  { post } from 'axios';
-import { Redirect } from 'react-router-dom';
+import  axios from 'axios';
+import { Redirect, Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 
 // logo color => rgb: 165 0 33, hex: #a50021
@@ -92,18 +92,6 @@ class Home extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.callApi()
-      .then(res => this.setState({ member: res }))
-      .catch(err => console.log(err));
-  }
-
-  callApi = async () => {
-    const response = await fetch('/join');
-    const body = await response.json();
-    return body;
-  }
-
   handleOpen = () => {
     this.setState({
       open: true
@@ -124,10 +112,15 @@ class Home extends React.Component {
 
   handleFormSubmit = (e) => {
     e.preventDefault()
-    this.join()
-      .then(response => {
-        console.log(response);
-      })
+    const user = {
+      username: this.state.username,
+      email: this.state.email,
+      password: this.state.password
+    };
+
+    axios
+      .post('/join', user)
+      .then(res => console.log(res.data));
 
     this.setState({
       member: '',
@@ -138,16 +131,6 @@ class Home extends React.Component {
       doRedirect: true
     })
 
-  }
-
-  join = () => {
-    const url = '/join';
-    const formData = new FormData();
-    formData.append('username', this.state.username);
-    formData.append('email', this.state.email);
-    formData.append('password', this.state.password);
-
-    return post(url, formData);
   }
 
   render() {
@@ -204,7 +187,7 @@ class Home extends React.Component {
             <Button variant="contained" className={classes.signup_btn} onClick={this.handleFormSubmit}>
               회원가입
             </Button>
-            { this.state.doRedirect && <Redirect to="/welcome" />}
+            {/* { this.state.doRedirect && <Redirect to="/welcome" />} */}
           </form>
         </div>
 

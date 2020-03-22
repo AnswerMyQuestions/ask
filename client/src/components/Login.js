@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import  { post } from 'axios';
+import  axios from 'axios';
 import { Redirect } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -70,12 +70,14 @@ class Login extends React.Component {
     super(props);
     this.state = {
       user: '',
-      userid: '',
+      username: '',
+      useremail: '',
       userpw: '',
       doRedirect: false
     }
   }
 
+/*  
   componentDidMount() {
     this.callApi()
       .then(res => 
@@ -88,6 +90,7 @@ class Login extends React.Component {
     const body = await response.json();
     return body;
   }
+*/
 
   handleValueChange = (e) => {
     let nextState = {};
@@ -97,26 +100,33 @@ class Login extends React.Component {
 
   handleFormSubmit = (e) => {
     e.preventDefault()
-    this.signin()
-      .then(response => {
-        console.log(response);
-      })
 
+    const user = {
+      useremail: this.state.useremail,
+      userpw: this.state.userpw,
+    };
+
+    console.log(user);
+
+    axios
+      .post('/signin', user)
+      .then(res => {
+        console.log(res)
+        this.setState({
+          username: res.data.data,
+          doRedirect: res.data.success
+        });
+        console.log(this.state.doRedirect);
+      }).catch(err => console.log(err));
+    
+    /*  
     this.setState({
       user: '',
-      userid: '',
+      useremail: '',
       userpw: '',
       doRedirect: true
     })
-  }
-
-  signin = () => {
-    const url = '/signin';
-    const formData = new FormData();
-    formData.append('userid', this.state.userid);
-    formData.append('userpw', this.state.userpw);
-
-    return post(url, formData);
+    */
   }
 
   render() {
@@ -136,11 +146,11 @@ class Login extends React.Component {
         </div>
         <div className={classes.login}>
           <form>
-            <TextField type="text" name="userid" label="아이디" value={this.state.userid} onChange={this.handleValueChange} className={classes.textField} /><br />
+            <TextField type="text" name="useremail" label="아이디" value={this.state.useremail} onChange={this.handleValueChange} className={classes.textField} /><br />
             <TextField type="password" name="userpw" label="비밀번호" value={this.state.userpw} onChange={this.handleValueChange} className={classes.textField} /><br />
             <Button variant="contained" className={classes.login_btn} onClick={this.handleFormSubmit}>로그인</Button>
-            { this.state.doRedirect && <Redirect to="/main" /> }
           </form>
+          { this.state.doRedirect && <Redirect to={{ pathname: "/main", state: { username: this.state.username } }}/> }
         </div>
       </div>
     )

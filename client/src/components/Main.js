@@ -12,6 +12,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 import { fade, withStyles } from '@material-ui/core/styles';
 
 // logo color => rgb: 165 0 33, hex: #a50021
@@ -187,9 +188,7 @@ class Main extends React.Component {
 
     axios
       .post('/createroom', room)
-      .then(res => {
-        console.log(res.data);
-      });
+      .then(res => console.log(res.data));
 
     this.setState({
       roomname: '',
@@ -197,6 +196,13 @@ class Main extends React.Component {
       roomowner: ''
     });
   }
+
+  handleLogout = (e) => {
+    e.preventDefault()
+    axios
+      .get('/signout');
+  }
+
   render() {
     const filteredComponents = (data) => {
       data = data.filter((c) => {
@@ -214,7 +220,7 @@ class Main extends React.Component {
           <Toolbar className={classes.toolbar}>
             <img src={logo} alt="logo" className={classes.image} />
             <div>
-              <Button variant="outlined" className={classes.logout_btn} href="/">
+              <Button variant="outlined" className={classes.logout_btn} onClick={this.handleLogout} href="/login">
                 로그아웃
                 </Button>
               <Button variant="outlined" className={classes.mypage_btn} href="/mypage">
