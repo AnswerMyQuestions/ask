@@ -1,3 +1,4 @@
+  
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
@@ -180,8 +181,8 @@ app.post('/signin', (req, res, next) => {
     req.logIn(user, (err) => {
       if (err) return next(err);
       return res.json({ data: user.user_name, success: true });
-    })(req, res, next);
-  });
+    });
+  })(req, res, next)
 });
 
 // Logout
