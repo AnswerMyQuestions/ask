@@ -120,9 +120,15 @@ class Home extends React.Component {
 
     axios
       .post('/join', user)
-      .then(res => console.log(res.data));
+      .then(res => {
+        console.log(res);
+        this.setState({
+          doRedirect: res.data.success
+        });
+      });
 
-    this.setState({
+      /*
+      this.setState({
       member: '',
       username: '',
       email: '',
@@ -130,7 +136,7 @@ class Home extends React.Component {
       open: false,
       doRedirect: true
     })
-
+    */
   }
 
   render() {
@@ -187,10 +193,9 @@ class Home extends React.Component {
             <Button variant="contained" className={classes.signup_btn} onClick={this.handleFormSubmit}>
               회원가입
             </Button>
-            {/* { this.state.doRedirect && <Redirect to="/welcome" />} */}
           </form>
+          { this.state.doRedirect && <Redirect to="/welcome"/> }
         </div>
-
       </div>
     );
   }

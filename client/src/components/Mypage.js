@@ -194,7 +194,7 @@ class Main extends React.Component {
             <img src={logo} alt="logo" className={classes.image} />
             <Button variant="outlined" href="/" className={classes.logout_btn}>
               로그아웃
-              </Button>
+            </Button>
           </Toolbar>
         </AppBar>
 

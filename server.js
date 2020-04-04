@@ -122,7 +122,8 @@ app.post('/join', async (req, res) => {
     dbConnection.query(sql, params,
       (err, rows, fields) => {
         if (err) console.log("join error" + err);
-        else res.send(rows);
+        else res.json({ success: true });
+        //else res.send(rows);
       });
   }
 });
@@ -189,7 +190,7 @@ app.post('/signin', (req, res, next) => {
 app.get('/signout', (req, res) => {
   console.log('signout get');
   req.logout();
-  res.redirect('/login');
+  res.json({ success: true });
 });
 
 // Main
@@ -199,19 +200,25 @@ app.get('/createroom', (req, res) => {
 
 app.post('/createroom', (req, res) => {
   console.log('createroom post');
-  //console.log(req.body);
-
-  let sql = "INSERT INTO ROOM(room_name, room_password, create_room_date, user_id) VALUES (?, ?, now(), ?)";
-
-  let roomname = req.body.roomname;
-  let roompassword = req.body.roompassword;
+  console.log(req.body);
+  let sql0 = "SELECT user_id FROM USER WHERE user_name = ?";
   let roomowner = req.body.roomowner;
-  let params = [roomname, roompassword, roomowner];
-  dbConnection.query(sql, params,
-    (err, rows, fields) => {
-      if (err) console.log("createroom error" + err);
-      else res.send(rows);
-    });
+  let params0 = [roomowner]
+  dbConnection.query(sql0, params0, (err, rows, fields) => {
+    if(err) console.log("there is no user" + err)
+    else {
+      let sql1 = "INSERT INTO ROOM(room_name, room_password, create_room_date, user_id, room_introduction) VALUES (?, ?, now(), ?, ?)";
+      let roomname = req.body.roomname;
+      let roompassword = req.body.roompassword;
+      let roomintroduction = req.body.roomintroduction;
+      let params1 = [roomname, roompassword, rows[0].user_id, roomintroduction];
+      dbConnection.query(sql1, params1,
+        (err, rows, fields) => {
+          if (err) console.log("createroom error" + err);
+          else res.send(rows);
+        });
+    }
+  });
 });
 
 app.get('/rooms', (req, res) => {

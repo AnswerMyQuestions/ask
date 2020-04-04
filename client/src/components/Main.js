@@ -12,7 +12,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import axios from 'axios';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import { fade, withStyles } from '@material-ui/core/styles';
 
 // logo color => rgb: 165 0 33, hex: #a50021
@@ -126,9 +126,11 @@ class Main extends React.Component {
       roomname: '',
       roompassword: '',
       roomowner: '',
+      roomintroduction: '',
       rooms: '',
       searchKeyword: '',
-      open: false
+      open: false,
+      doRedirect: false
     }
   }
 
@@ -183,24 +185,34 @@ class Main extends React.Component {
     const room = {
       roomname: this.state.roomname,
       roompassword: this.state.roompassword,
-      roomowner: this.state.roomowner
+      roomowner: this.state.roomowner,
+      roomintroduction: this.state.roomintroduction
     };
 
     axios
       .post('/createroom', room)
-      .then(res => console.log(res.data));
+      .then(res => console.log(res));
 
     this.setState({
       roomname: '',
       roompassword: '',
-      roomowner: ''
+      roomowner: '',
+      roomintroduction: '',
+      open: false,
+      doRedirect: false
     });
   }
 
   handleLogout = (e) => {
     e.preventDefault()
     axios
-      .get('/signout');
+      .get('/signout')
+      .then(res => {
+        console.log(res)
+        this.setState({
+          doRedirect: res.data.success
+        })
+      });
   }
 
   render() {
@@ -209,10 +221,11 @@ class Main extends React.Component {
         return c.room_name.indexOf(this.state.searchKeyword) > -1;
       });
       return data.map((c) => {
-        return <Room key={c.room_id} roomname={c.room_name} roomowner={c.user_name}/>
+        return <Room key={c.room_id} roomname={c.room_name} roomowner={c.user_name} roomintroduction={c.room_introduction}/>
       });
     }
     const { classes } = this.props;
+    const username = this.props.location.state.username
     return (
       <div className={classes.root}>
 
@@ -220,12 +233,14 @@ class Main extends React.Component {
           <Toolbar className={classes.toolbar}>
             <img src={logo} alt="logo" className={classes.image} />
             <div>
-              <Button variant="outlined" className={classes.logout_btn} onClick={this.handleLogout} href="/login">
+              <div>{ username }</div>
+              <Button variant="outlined" className={classes.logout_btn} onClick={this.handleLogout}>
                 로그아웃
-                </Button>
+              </Button>
+              { this.state.doRedirect && <Redirect to="/login" /> }
               <Button variant="outlined" className={classes.mypage_btn} href="/mypage">
                 마이 페이지
-                </Button>
+              </Button>
             </div>
           </Toolbar>
         </AppBar>
@@ -261,6 +276,7 @@ class Main extends React.Component {
                     <TextField type="text" name="roomname" label="방 이름" value={this.state.roomname} onChange={this.handleValueChange} className={classes.textField} /><br />
                     <TextField type="text" name="roompassword" label="방 비밀번호" value={this.state.roompassword} onChange={this.handleValueChange} className={classes.textField} /><br />
                     <TextField type="text" name="roomowner" label="방 주인" value={this.state.roomowner} onChange={this.handleValueChange} className={classes.textField} /><br />
+                    <TextField type="text" name="roomintroduction" label="방 소개" value={this.state.roomintroduction} onChange={this.handleValueChange} className={classes.textField} /><br />
                   </form>
                 </DialogContent>
                 <DialogActions>

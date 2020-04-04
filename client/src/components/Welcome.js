@@ -3,6 +3,7 @@ import logo from './ask_logo.png';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 
 // logo color => rgb: 165 0 33, hex: #a50021
@@ -47,7 +48,9 @@ class Welcome extends React.Component {
 
         <AppBar position="static">
           <Toolbar className={classes.toolbar}>
-            <img src={logo} alt="logo" className={classes.image} />
+            <Link to="/">
+              <img src={logo} alt="logo" className={classes.image} />
+            </Link>
           </Toolbar>
         </AppBar>
 
